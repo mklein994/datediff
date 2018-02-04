@@ -1,11 +1,9 @@
 extern crate datediff;
 
-use std::env;
-
 fn main() {
-    let args = env::args();
+    let matches = datediff::app::build_cli();
 
-    if let Err(err) = datediff::run(args) {
+    if let Err(err) = datediff::run(matches) {
         eprintln!("error: {}", err);
         std::process::exit(1);
     }

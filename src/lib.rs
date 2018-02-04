@@ -1,6 +1,10 @@
 extern crate chrono;
+#[macro_use]
+extern crate clap;
 
-use std::env;
+pub mod app;
+
+use clap::ArgMatches;
 use std::fmt;
 
 #[derive(Debug)]
@@ -32,7 +36,7 @@ impl From<chrono::ParseError> for Error {
 
 type Result<T> = std::result::Result<T, Error>;
 
-pub fn run(mut args: env::Args) -> Result<()> {
-    let duration = args.next().unwrap();
+pub fn run(matches: ArgMatches) -> Result<()> {
+    eprintln!("{:#?}", matches);
     Ok(())
 }
