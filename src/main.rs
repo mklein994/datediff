@@ -4,7 +4,7 @@ fn main() {
     let matches = datediff::app::build_cli();
 
     if let Err(err) = datediff::run(matches) {
-        eprintln!("error: {}", err);
+        eprintln!("{}", err);
         std::process::exit(1);
     }
 }
