@@ -13,7 +13,7 @@ use self::error::Error;
 
 type Result<T> = std::result::Result<T, Error>;
 
-pub fn run(matches: ArgMatches) -> Result<()> {
+pub fn run(matches: &ArgMatches) -> Result<()> {
     eprintln!("{:#?}", matches);
 
     let seconds = if matches.is_present("duration") {
