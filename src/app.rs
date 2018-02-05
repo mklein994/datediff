@@ -1,6 +1,6 @@
-use clap::{App, Arg, ArgMatches};
+use clap::{App, Arg};
 
-pub fn build_cli<'a>() -> ArgMatches<'a> {
+pub fn build_cli() -> App<'static, 'static> {
     App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
@@ -26,5 +26,4 @@ pub fn build_cli<'a>() -> ArgMatches<'a> {
                 .aliases(&["finish", "f"])
                 .takes_value(true),
         )
-        .get_matches()
 }
