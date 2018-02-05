@@ -5,5 +5,5 @@ authors = ["Matthew Klein <mklein994@gmail.com>"]
 
 [dependencies]
 chrono = "0.4.0"
-chrono-humanize = "0.0.10"
+chrono-humanize = "0.0.11"
 clap = "2.29.2"
