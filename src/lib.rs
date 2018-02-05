@@ -7,7 +7,7 @@ pub mod app;
 mod error;
 
 use chrono::{DateTime, Local};
-use chrono_humanize::HumanTime;
+use chrono_humanize::{Accuracy, HumanTime, Tense};
 use clap::ArgMatches;
 use self::error::Error;
 
@@ -37,5 +37,8 @@ pub fn run(matches: &ArgMatches) -> Result<()> {
 
 fn print_duration(seconds: i64) {
     use chrono::Duration;
-    println!("{:#}", HumanTime::from(Duration::seconds(seconds)));
+    println!(
+        "{}",
+        HumanTime::from(Duration::seconds(seconds)).to_text_en(Accuracy::Precise, Tense::Present)
+    );
 }
