@@ -17,16 +17,14 @@ pub fn build_cli<'a>() -> ArgMatches<'a> {
                 .long("begin")
                 .aliases(&["start", "s"])
                 .takes_value(true)
-                .requires("end")
-                .group("difference"),
+                .requires("end"),
         )
         .arg(
             Arg::with_name("end")
                 .short("e")
                 .long("end")
                 .aliases(&["finish", "f"])
-                .takes_value(true)
-                .group("difference"),
+                .takes_value(true),
         )
         .get_matches()
 }
