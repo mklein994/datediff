@@ -6,7 +6,7 @@ extern crate clap;
 pub mod app;
 mod error;
 
-use chrono::{DateTime, Local};
+use chrono::{DateTime, Local, TimeZone};
 use chrono_humanize::{Accuracy, HumanTime, Tense};
 use clap::ArgMatches;
 use self::error::Error;
@@ -22,18 +22,26 @@ pub fn run(matches: &ArgMatches) -> Result<()> {
         }
     } else if matches.is_present("difference") {
         let (start, end) = if matches.values_of("difference").unwrap().count() < 2 {
+            let time_string = matches.value_of("difference").unwrap();
             (
                 Local::now(),
-                matches
-                    .value_of("difference")
-                    .unwrap()
-                    .parse::<DateTime<Local>>()?,
+                if matches.is_present("seconds") {
+                    Local.timestamp(time_string.parse::<i64>()?, 0)
+                } else {
+                    matches
+                        .value_of("difference")
+                        .unwrap()
+                        .parse::<DateTime<Local>>()?
+                },
             )
         } else {
-            let mut times = matches
-                .values_of("difference")
-                .unwrap()
-                .map(|t| t.parse::<DateTime<Local>>());
+            let mut times = matches.values_of("difference").unwrap().map(|t| {
+                if matches.is_present("seconds") {
+                    Ok(Local.timestamp(t.parse::<i64>()?, 0))
+                } else {
+                    t.parse::<DateTime<Local>>().map_err(Error::Chrono)
+                }
+            });
 
             (times.next().unwrap()?, times.next().unwrap()?)
         };

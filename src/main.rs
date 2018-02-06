@@ -1,6 +1,6 @@
-extern crate datediff;
 #[macro_use]
 extern crate clap;
+extern crate datediff;
 
 use datediff::app;
 use clap::Shell;

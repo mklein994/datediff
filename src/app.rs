@@ -12,6 +12,12 @@ pub fn build_cli() -> App<'static, 'static> {
                 .alias("diff")
                 .max_values(2),
         )
+        .arg(
+            Arg::with_name("seconds")
+                .short("s")
+                .long("seconds")
+                .conflicts_with("duration"),
+        )
         .arg(Arg::with_name("rough").short("r").long("rough"))
         .subcommand(
             SubCommand::with_name("completions")
