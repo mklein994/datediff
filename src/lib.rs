@@ -14,31 +14,49 @@ use self::error::Error;
 type Result<T> = std::result::Result<T, Error>;
 
 pub fn run(matches: &ArgMatches) -> Result<()> {
-    let seconds = if matches.is_present("duration") {
-        matches.value_of("duration").unwrap().parse::<i64>()?
-    } else {
-        let start = matches
-            .value_of("start")
-            .map_or(Ok(Local::now()), |start| start.parse::<DateTime<Local>>())
-            .map_err(Error::Chrono)?;
+    let accuracy = get_accuracy(matches.is_present("rough"));
 
-        let end = matches
-            .value_of("end")
-            .map_or(Ok(Local::now()), |end| end.parse::<DateTime<Local>>())
-            .map_err(Error::Chrono)?;
+    if matches.is_present("duration") {
+        for i in matches.values_of("duration").unwrap() {
+            print_duration(i.parse::<i64>()?, accuracy);
+        }
+    } else if matches.is_present("difference") {
+        let (start, end) = if matches.values_of("difference").unwrap().count() < 2 {
+            (
+                Local::now(),
+                matches
+                    .value_of("difference")
+                    .unwrap()
+                    .parse::<DateTime<Local>>()?,
+            )
+        } else {
+            let mut times = matches
+                .values_of("difference")
+                .unwrap()
+                .map(|t| t.parse::<DateTime<Local>>());
 
-        end.timestamp() - start.timestamp()
+            (times.next().unwrap()?, times.next().unwrap()?)
+        };
+
+        let seconds = end.timestamp() - start.timestamp();
+        print_duration(seconds, accuracy);
     };
-
-    print_duration(seconds);
 
     Ok(())
 }
 
-fn print_duration(seconds: i64) {
+fn print_duration(seconds: i64, accuracy: Accuracy) {
     use chrono::Duration;
     println!(
         "{}",
-        HumanTime::from(Duration::seconds(seconds)).to_text_en(Accuracy::Precise, Tense::Present)
+        HumanTime::from(Duration::seconds(seconds)).to_text_en(accuracy, Tense::Present)
     );
+}
+
+fn get_accuracy(is_rough: bool) -> Accuracy {
+    if is_rough {
+        Accuracy::Rough
+    } else {
+        Accuracy::Precise
+    }
 }

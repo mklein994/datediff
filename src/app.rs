@@ -4,26 +4,13 @@ pub fn build_cli() -> App<'static, 'static> {
     App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
+        .arg(Arg::with_name("duration").multiple(true))
         .arg(
-            Arg::with_name("duration")
+            Arg::with_name("difference")
                 .short("d")
-                .long("duration")
-                .takes_value(true)
-                .conflicts_with("difference"),
+                .long("difference")
+                .alias("diff")
+                .max_values(2),
         )
-        .arg(
-            Arg::with_name("begin")
-                .short("b")
-                .long("begin")
-                .aliases(&["start", "s"])
-                .takes_value(true)
-                .requires("end"),
-        )
-        .arg(
-            Arg::with_name("end")
-                .short("e")
-                .long("end")
-                .aliases(&["finish", "f"])
-                .takes_value(true),
-        )
+        .arg(Arg::with_name("rough").short("r").long("rough"))
 }
